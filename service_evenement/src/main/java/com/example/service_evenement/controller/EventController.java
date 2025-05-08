@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import com.example.service_evenement.model.Event;
 import com.example.service_evenement.service.EventService;
 @CrossOrigin(origins = {
-		"http://localhost:3007",
+		"http://localhost:3002",
 	    "http://localhost:5300",
 
 	})

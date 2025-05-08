@@ -32,22 +32,6 @@ public class RegistrationController {
     @Autowired
     private RegistrationService registrationService;
 
-    private final JobLauncher jobLauncher ;
-    private final Job updateParticipantCountJob;
-
-    @PostMapping("/trigger-batch")
-    public ResponseEntity<String> triggerBatch() {
-        try {
-            JobParameters params = new JobParametersBuilder()
-                .addLong("timestamp", System.currentTimeMillis())
-                .toJobParameters();
-            jobLauncher.run(updateParticipantCountJob, params);
-            return ResponseEntity.ok("Batch triggered");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("Error: " + e.getMessage());
-        }
-    }
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public CompletableFuture<ResponseEntity<Registration>> registerUser(@RequestParam String eventId, @RequestParam String userEmail) {

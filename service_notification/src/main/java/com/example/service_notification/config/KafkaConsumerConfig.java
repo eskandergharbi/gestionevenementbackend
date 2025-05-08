@@ -9,7 +9,7 @@ import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 
-import com.example.service_participant.model.Notification;
+import com.example.service_notification.config.Notification;
 
 import java.util.HashMap;
 import java.util.Map;

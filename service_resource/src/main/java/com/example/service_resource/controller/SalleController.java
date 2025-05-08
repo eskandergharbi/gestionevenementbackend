@@ -9,8 +9,8 @@ import com.example.service_resource.model.Salle;
 import com.example.service_resource.repository.SalleRepository;
 
 import java.util.List;
-@CrossOrigin(origins = 
-		"http://localhost:2000")
+@CrossOrigin(origins = "http://localhost:2000", allowedHeaders = "*", methods = { RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE })
+
 @RestController
 @RequestMapping("/Salles")
 public class SalleController {

@@ -65,4 +65,11 @@ public class EquipementController {
     	
 		return equipementRepository.getEquipementBySalleId(id);
     }
+    @DeleteMapping("/{id}")
+    public void deleteEquipement(@PathVariable Long id) {
+        Equipement equipement = equipementRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Equipement not found with id " + id));
+        equipementRepository.delete(equipement);
+    }
+
 }

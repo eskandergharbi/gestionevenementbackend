@@ -2,7 +2,6 @@ package com.example.service_participant.service;
 
 import com.example.service_participant.dto.EventCountDTO;
 import com.example.service_participant.model.*;
-import com.example.service_participant.repository.EventRepository;
 import com.example.service_participant.repository.RegistrationRepository;
 import com.example.service_participant.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,19 +9,17 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
-import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.client.RestTemplate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.timelimiter.annotation.TimeLimiter;
+import io.github.resilience4j.retry.annotation.Retry;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
+
 
 @Service
 public class RegistrationService {
@@ -30,8 +27,6 @@ public class RegistrationService {
     private MongoTemplate mongoTemplate;
     @Autowired
     private RegistrationRepository registrationRepository;
-    @Autowired
-    private EventRepository eventRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -45,7 +40,6 @@ public class RegistrationService {
     @Autowired
     private NotificationProducer notificationProducer;
 
-    private static final Logger log = LoggerFactory.getLogger(RegistrationService.class);
 
     public Registration registerUser(String eventId, String userEmail) {
         try {
@@ -111,20 +105,16 @@ public class RegistrationService {
             throw ex;
         }
     }
-
+    @CircuitBreaker(name = "events", fallbackMethod = "fallbackGetEventById")
+    @TimeLimiter(name = "events")
+    @Retry(name = "events")
     private Event getEventById(String eventId) {
-        try {
-            ResponseEntity<Event> response = restTemplate.getForEntity(eventServiceUrl + "/" + eventId, Event.class);
-            if (response.getBody() == null) {
-                throw new RuntimeException("No event found for ID: " + eventId);
-            }
-            return response.getBody();
-        } catch (Exception ex) {
-            throw new RuntimeException("Unable to retrieve event with ID: " + eventId, ex);
+        ResponseEntity<Event> response = restTemplate.getForEntity(eventServiceUrl + "/" + eventId, Event.class);
+        if (response.getBody() == null) {
+            throw new RuntimeException("No event found for ID: " + eventId);
         }
+        return response.getBody();
     }
-
-
     public List<EventCountDTO> getEventParticipantCounts() {
         Aggregation aggregation = Aggregation.newAggregation(
             // Step 1: Join with the "events" collection

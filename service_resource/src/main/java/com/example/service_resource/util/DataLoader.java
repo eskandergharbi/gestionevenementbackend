@@ -8,12 +8,10 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import com.example.service_resource.model.Equipement;
-import com.example.service_resource.model.Inventory;
 import com.example.service_resource.model.Reservation;
 import com.example.service_resource.model.Salle;
 import com.example.service_resource.model.SalleStatus;
 import com.example.service_resource.repository.EquipementRepository;
-import com.example.service_resource.repository.InventoryRepository;
 import com.example.service_resource.repository.ReservationRepository;
 import com.example.service_resource.repository.SalleRepository;
 
@@ -27,7 +25,6 @@ public class DataLoader implements CommandLineRunner {
 
     private static final Logger log = LoggerFactory.getLogger(DataLoader.class);
 
-    private final InventoryRepository inventoryRepository;
     private final EquipementRepository equipementRepository;
     private final ReservationRepository reservationRepository;
     private final SalleRepository salleRepository;
@@ -49,10 +46,10 @@ public class DataLoader implements CommandLineRunner {
         equipementRepository.saveAll(List.of(projecteur, table));
         log.info("Saved Equipements: Projecteur, Table");
 
-        // Add inventory stock
-        Inventory stockProjecteur = new Inventory(null, projecteur, 10);
-        Inventory stockTable = new Inventory(null, table, 5);
-        inventoryRepository.saveAll(List.of(stockProjecteur, stockTable));
+//        // Add inventory stock
+//        Inventory stockProjecteur = new Inventory(null, projecteur, 10);
+//        Inventory stockTable = new Inventory(null, table, 5);
+//        inventoryRepository.saveAll(List.of(stockProjecteur, stockTable));
         log.info("Inventory created for Equipements");
     }
 }

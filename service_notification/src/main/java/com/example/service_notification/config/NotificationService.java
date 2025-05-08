@@ -5,7 +5,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
-import com.example.service_participant.model.Notification;
+import com.example.service_notification.config.Notification;
 
 import lombok.extern.slf4j.Slf4j;
 @Slf4j

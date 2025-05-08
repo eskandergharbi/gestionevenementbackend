@@ -4,9 +4,11 @@ import org.springframework.batch.core.configuration.annotation.EnableBatchProces
 import org.springframework.boot.SpringApplication;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 @EnableBatchProcessing
+@EnableDiscoveryClient
 @SpringBootApplication
 public class ServiceParticipantApplication {
 
