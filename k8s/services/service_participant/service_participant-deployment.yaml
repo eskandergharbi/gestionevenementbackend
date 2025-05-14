@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: service_participant
+  name: service_participant
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: service_participant
+  strategy: {}
+  template:
+    metadata:
+
+      labels:
+        app: service_participant
+    spec:
+      containers:
+        - env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: docker
+		    - name: SPRING_DATASOURCE_URL
+			  value: jdbc:mysql://communication-service:3306/communication-service
+          image: eskandergharbi/service_participant:latest
+          name: service_participant
+          resources: {}
+      restartPolicy: Always
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: service_participant
+  name: service_participant
+spec:
+  ports:
+    - name: "80"
+      port: 80
+      targetPort: 8101
+  selector:
+    app: service_participant
+status:
+  loadBalancer: {}

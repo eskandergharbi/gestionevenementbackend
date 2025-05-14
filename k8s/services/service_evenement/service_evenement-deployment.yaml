@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: service_evenement
+  name: service_evenement
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: service_evenement
+  strategy: {}
+  template:
+    metadata:
+
+      labels:
+        app: service_evenement
+    spec:
+      containers:
+        - env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: docker
+          image: eskandergharbi/service_evenement:latest
+          name: service_evenement
+          resources: {}
+      restartPolicy: Always
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: service_evenement
+  name: service_evenement
+spec:
+  ports:
+    - name: "80"
+      port: 80
+      targetPort: 8081
+  selector:
+    app: service_evenement
+status:
+  loadBalancer: {}

@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: service_notification
+  name: service_notification
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: service_notification
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: service_notification
+    spec:
+      containers:
+        - env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: docker
+          image: eskandergharbi/service_notification:latest
+          name: service_notification
+          resources: {}
+      restartPolicy: Always
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: service_notification
+  name: service_notification
+spec:
+  ports:
+    - name: "80"
+      port: 80
+      targetPort: 8200
+  selector:
+    app: service_notification
+status:
+  loadBalancer: {}

@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: ressource-service
+  name: ressource-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ressource-service
+  template:
+    metadata:
+      labels:
+        app: ressource-service
+    spec:
+      containers:
+        - env:
+            - name: PGDATA
+              value: /data/postgres
+            - name: POSTGRES_DB
+              value: inventory-service
+            - name: POSTGRES_PASSWORD
+              value: password
+            - name: POSTGRES_USER
+              value: ptechie
+          image: postgres
+          name: ressource-service
+          ports:
+            - containerPort: 5432
+          resources: {}
+          volumeMounts:
+            - mountPath: /data/postgres
+              name: ressource-service-claim0
+      restartPolicy: Always
+      volumes:
+        - name: ressource-service-claim0
+          persistentVolumeClaim:
+            claimName: ressource-service-claim0
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: ressource-service
+  name: ressource-service
+spec:
+  ports:
+    - name: "5432"
+      port: 5432
+      targetPort: 5432
+  selector:
+    app: ressource-service
+status:
+  loadBalancer: {}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    app: ressource-service-claim0
+  name: ressource-service-claim0
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+status: {}

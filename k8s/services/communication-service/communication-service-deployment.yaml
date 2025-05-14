@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: communication-service
+  name: communication-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: communication-service
+  strategy: {}
+  template:
+    metadata:
+
+      labels:
+        app: communication-service
+    spec:
+      containers:
+        - env:
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:mysql://communication-service:3306/communication-service
+            - name: SPRING_PROFILES_ACTIVE
+              value: docker
+          image: eskandergharbi/communication-service:latest
+          name: communication-service
+          resources: {}
+      restartPolicy: Always
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: communication-service
+  name: communication-service
+spec:
+  ports:
+    - name: "80"
+      port: 80
+      targetPort: 9193
+  selector:
+    app: communication-service
+status:
+  loadBalancer: {}

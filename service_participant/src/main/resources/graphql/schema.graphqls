@@ -1,0 +1,8 @@
+type Query {
+  getEventCounts: [EventCount]
+}
+
+type EventCount {
+  eventId: String
+  participantCount: Int
+}
